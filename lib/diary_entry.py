@@ -1,41 +1,39 @@
+# this class needs to be refactored/readability improved 
+
 class DiaryEntry:
     def __init__(self, title, contents):
-        # Parameters:
-        #   title: string
-        #   contents: string
+        if title == "" or contents == "":
+            raise Exception("Diary entries must have a title and contents")
+        self.title = title
+        self.contents = contents
+        self.chunk_words_no = 0
         pass
 
     def format(self):
-        # Returns:
-        #   A formatted diary entry, for example:
-        #   "My Title: These are the contents"
-        pass
+        output = f"{self.title}: {self.contents}"
+        return output
 
     def count_words(self):
-        # Returns:
-        #   int: the number of words in the diary entry
-        pass
+        no_words = len(self.contents.split())
+        return no_words
 
     def reading_time(self, wpm):
-        # Parameters:
-        #   wpm: an integer representing the number of words the user can read 
-        #        per minute
-        # Returns:
-        #   int: an estimate of the reading time in minutes for the contents at
-        #        the given wpm.
-        pass
+        if wpm == 0:
+            raise Exception("wpm cannot be 0")
+        no_words = len(self.contents.split())
+        return no_words/wpm
 
     def reading_chunk(self, wpm, minutes):
-        # Parameters
-        #   wpm: an integer representing the number of words the user can read
-        #        per minute
-        #   minutes: an integer representing the number of minutes the user has
-        #            to read
-        # Returns:
-        #   string: a chunk of the contents that the user could read in the
-        #           given number of minutes
-        #
-        # If called again, `reading_chunk` should return the next chunk,
-        # skipping what has already been read, until the contents is fully read.
-        # The next call after that should restart from the beginning.
-        pass
+        words_in_contents = self.contents.split()
+        print(f"words_in_contents: {words_in_contents}")
+        no_words_read=wpm*minutes
+        print(f"chunk_words_no:{self.chunk_words_no}")
+        print(f"no_words_read:{no_words_read}")
+        # this line is the issue 
+        words_read = words_in_contents[self.chunk_words_no:self.chunk_words_no+no_words_read]
+        print(f"words_read:{words_read}")
+        self.chunk_words_no += no_words_read
+        if self.chunk_words_no >= len(self.contents.split()):
+            self.chunk_words_no =0
+        print(f"chunk_words_no:{self.chunk_words_no}")
+        return " ".join(words_read)
